@@ -56,7 +56,6 @@ void menuAdmin() {
     printf("======================================\n");
 }
 
-// nhap lua chon
 void runMainMenu() {
     while(1) {
         int choice;
@@ -81,17 +80,17 @@ void AddUser() {
     struct User user;
     printf("*** Add a new user ***\n");
     printf("Enter the ID: ");
-    fgets(user.userId, sizeof(user.userId), stdin);
+    user.userId[strcspn(user.userId, "\n")] = 0;
     fflush(stdin);
     printf("Enter the Name: ");
     fgets(user.name, sizeof(user.name), stdin);
-    fflush(stdin);
+    user.name[strcspn(user.name, "\n")] = 0;
     printf("Enter the email: ");
     fgets(user.email, sizeof(user.email), stdin);
-    fflush(stdin);
+    user.email[strcspn(user.email, "\n")] = 0;
     printf("Enter the Phone number: ");
     fgets(user.phone, sizeof(user.phone), stdin);
-    fflush(stdin);
+    user.phone[strcspn(user.phone, "\n")] = 0;
     printf("Enter the gender: ");
     scanf("%d", &user.gender);
     printf("Enter the Date of Birth: \n");
@@ -102,6 +101,10 @@ void AddUser() {
     printf("   Enter the Year: ");
     scanf("%d", &user.dateOfBirth.year);
     printf("\nAdded successfully\n");
+        while (getchar() != '\n');
+            printf("\n User added successfully!\n");
+
+
 }
 
 
