@@ -27,9 +27,11 @@ void addStudent(){
     switch (choice) {
         case 1:
             printf("\nYou selected Admin.\n");
+            menuAdmin();
             break;
         case 2:
             printf("\nYou selected User.\n");
+            AddUser();
             listUser();
             break;
         case 0:
@@ -54,7 +56,7 @@ void menuAdmin() {
     printf("======================================\n");
 }
 
-//2 nhap lua chon
+// nhap lua chon
 void runMainMenu() {
     while(1) {
         int choice;
@@ -68,7 +70,7 @@ void runMainMenu() {
                 printf("User\n");
             break;
             case 0:
-                exit(0);
+            
             default:
                 printf("Invalid Choice\n");
         }
