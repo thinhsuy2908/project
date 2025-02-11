@@ -9,10 +9,11 @@ void listUser(struct User *user,int *uses) {
     printf("|============|=======================|================================|==============|==========|\n");
 	for(int i=0;i<*uses;i++){
     	printf("|%-12s|%-23s|%-32s|%-14s|%-10s|\n","UserId","Name","Email","Phone","Status");
-    	printf("|%-12s|%-23s|%-32s|%-14s|%-10s|\n", "1", "2", "3", "4", "5");
+    	printf("|%-12s|%-23s|%-32s|%-14d|%-10s|\n", user[i].userId, user[i].name, user[i].email, user[i].phone, "Status");
     	printf("|============|=======================|================================|==============|==========|\n");
     }
 };
+
 void showSytemtMenu(struct User *user, int*uses){
     int choice;
 
@@ -82,19 +83,21 @@ void runMainMenu() {
 // nhap nguoi dung moi
 void AddUser(struct User*user,int *uses) {
     printf("*** Add a new user ***\n");
+    fflush(stdin);
     printf("Enter the ID: ");
     fgets(user[*uses].userId,sizeof(user[*uses].userId), stdin);
-    getchar();
+    user[*uses].userId[strcspn(user[*uses].userId, "\n")] = '\0';
     fflush(stdin);
     printf("Enter the Name: ");
     fgets(user[*uses].name, sizeof(user[*uses].name), stdin);
-    user[*uses].name[strcspn(user[*uses].name, "\n")] = 0;
+    user[*uses].name[strcspn(user[*uses].name, "\n")] = '\0';
     printf("Enter the email: ");
     fgets(user[*uses].email, sizeof(user[*uses].email), stdin);
-    user[*uses].email[strcspn(user[*uses].email, "\n")] = 0;
+    user[*uses].email[strcspn(user[*uses].email, "\n")] = '\0';
     printf("Enter the Phone number: ");
+    fflush(stdin);
     fgets(user[*uses].phone, sizeof(user[*uses].phone), stdin);
-    user[*uses].phone[strcspn(user[*uses].phone, "\n")] = 0;
+    user[*uses].phone[strcspn(user[*uses].phone, "\n")] = '\0';
     fflush(stdin);
     printf("Enter the gender: ");
     scanf("%d", &user[*uses].gender);
