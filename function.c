@@ -9,7 +9,8 @@ void listUser(struct User *user,int *uses) {
     printf("|============|=======================|================================|==============|==========|\n");
 	for(int i=0;i<*uses;i++){
     	printf("|%-12s|%-23s|%-32s|%-14s|%-10s|\n","UserId","Name","Email","Phone","Status");
-    	printf("|%-12s|%-23s|%-32s|%-14d|%-10s|\n", user[i].userId, user[i].name, user[i].email, user[i].phone, "Status");
+    	printf("%s", user[i].phone);
+    	printf("|%-12s|%-23s|%-32s|%-14s|%-10s|\n", user[i].userId, user[i].name, user[i].email, user[i].phone, "Status");
     	printf("|============|=======================|================================|==============|==========|\n");
     }
 };
