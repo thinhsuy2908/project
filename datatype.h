@@ -1,18 +1,21 @@
+// noi luu thu vien
+#pragma once
+
 #include<stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-struct date{
+
+
+struct Date{
 	int month,day,year;
 };
-struct Transaction{
+struct Transaction {
     char transferId[10];
     char receivingId[10];
     double amount;
-    char type[10];  // deposit / transfer / withdraw
+    char type[10]; // deposit / transfer / withdraw
     char message[50];
+    struct Date transactionDate;
 };
-struct AccountInfo{
+struct AccountInfo {
     char userId[20];
     float balance;
     bool status;
@@ -23,9 +26,9 @@ struct AccountInfo{
 struct User {
     char userId[10];
     char name[20];
-    bool gender;
+    struct Date dateOfBirth;
+    int gender;
     char phone[10];
-    char email[20];
-    struct date dateOfBirth;
+    char email[50];
+    char Status[20];
 };
-
