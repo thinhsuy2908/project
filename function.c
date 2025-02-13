@@ -53,6 +53,7 @@ void AddUser(struct User* user,int* uses) {
 	    getchar();
 	    printf("Enter the Date of Birth (DD\\MM\\YY): \n");
 	    scanf("%d%d%d", &newUser.dateOfBirth.day, &newUser.dateOfBirth.month, &newUser.dateOfBirth.year);	    
+		strcpy("open",newUser.Status);
 	} 	
 	user[*uses]=newUser;
 	printf("\nAdded successfully\n");
@@ -164,10 +165,10 @@ void listUser(struct User *user, int uses) {
 	system("cls");
     printf("%50s", "*** List User ***\n");
     printf("|============|=======================|================================|==============|==========|\n");
-    printf("|%-12s|%-23s|%-32s|%-14s|%-10s|\n", "UserId", "Name", "Email", "Phone", "Gender");
+    printf("|%-12s|%-23s|%-32s|%-14s|%-10s|\n", "UserId", "Name", "Email", "Phone", "Status");
     for(int i = 0; i < uses; i++) {
         printf("|============|=======================|================================|==============|==========|\n");
-        printf("|%-12s|%-23s|%-32s|%-14s|%-10s|\n", user[i].userId, user[i].name, user[i].email, user[i].phone, user[i].gender ? "male" : "female");
+        printf("|%-12s|%-23s|%-32s|%-14s|%-10s|\n", user[i].userId, user[i].name, user[i].email, user[i].phone, user[i].Status );
     }
     printf("|============|=======================|================================|==============|==========|\n");
 }
@@ -225,6 +226,9 @@ void menuAdmin(struct User* user, int* uses) {
 			}
             	
             	}
+            case 4:
+            	idLock(user, *uses);
+            	break;
             case 7:
                 goBack(user, uses);
                 break;    
@@ -266,4 +270,85 @@ void showSystemMenu(struct User *user, int* uses) {
             printf("\nInvalid choice! Please try again.\n");
     }
 }
+void idLock(struct User *user, int* uses){
+	system("cls");
+	char id[20];
+	char status;
+	char choice;
+    int flag = 1;
+    printf("Enter id to check: ");
+    getchar();
+    fgets(id, 20, stdin);
+    id[strcspn(id, "\n")] = '\0';
 
+    for(int i = 0; i < uses; i++) {
+        if(strcmp(id, user[i].userId) == 0) {
+            flag = 0;
+            printf("ID found:\n");
+            if(status == "close"){
+            	printf("Your account is locked");
+            	printf("Do you want to change the status to closed?");
+            	scanf("%s",&choice);
+            	switch(choice){
+            		printf("[n].No");
+					printf("[y].Yes");
+            		case 'n':
+            			
+            		case 'y':
+            			printf("[y].Yes");
+            			strcpy("open",user[i].Status);
+            			printf("open successfully");
+				}
+			}
+			else if(status == "open"){
+				printf("Your account is open");
+				printf("Do you want to change the status to open?");
+				switch(choice){
+					printf("[n].No");
+					printf("[y].Yes");
+            		case 'n':
+            			
+            		case 'y':
+            			
+            			strcpy("close",user[i].Status);
+						printf("closed successfully");	
+			}
+    break;
+			}
+    if(flag) {
+        printf("ID not found!!\n");
+    }
+}
+}
+}
+printf("\n\t+------------x SORT MENU x-------------+\n");		
+printf("|%-38s|\n\t", "[1] Sort students by name Descending.");		
+printf("|%-38s|\n\t\t\t\t\t\t", "[2] Sort students by name Ascending.");
+printf("+--------------------------------------+");
+printf("\n\n\t\t\t\t\t\t-> Enter your choice: ");
+scanf("%d", &sortChoice);
+	if(sortChoice == 1){
+		for(int i = 0; i < (*studentCount) - 1; i++){
+			for(int j = 0; j < (*studentCount) - i - 1; j++){
+				if(strcmp(students[j].name, students[j + 1].name) < 0){
+						Student temp = students[j];
+						students[j] = students[j + 1];
+						students[j + 1] = temp;
+}
+	}	
+		}
+									
+printf("\n\t User after Descending arrangement: ");
+displayListStudents(students, *studentCount);
+goBackOrExit();
+}
+else if(sortChoice == 2){
+	for(int a = 0; a < (*userCount) - 1; a++){
+		for(int b = 0; b < (*userCount) - a - 1; b++){
+			if(strcmp(students[b].name, students[b + 1].name) > 0){
+				Student temp = students[b];
+				students[b] = students[b + 1];
+				students[b + 1] = temp;
+}
+	}	
+		}
