@@ -2,15 +2,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include "datatype.h"
+
+
 void AddUser(struct User* user,int* uses) {
-struct User newUser;
-int check=0;
+	system("cls"); 
+	struct User newUser;
+	int check=0;
 	while(!check){
 		check=1;
 		printf("*** Add a new user ***\n");
 	    printf("Enter the ID: ");
 	    scanf("%s", newUser.userId);
-	    getchar();
+	    while(getchar()!='\n');
 	    printf("Enter the Name: ");
 	    fgets(newUser.name, sizeof(newUser.name), stdin);
 	    newUser.name[strcspn(newUser.name, "\n")] = 0;
@@ -38,7 +41,7 @@ int check=0;
 	    fgets(newUser.email, sizeof(newUser.email), stdin);
 	    newUser.email[strcspn(newUser.email, "\n")] = 0;
 	    
-	    if(strlen(newUser.email)==0 || strlen(newUser.name)==0){
+	    if(strlen(newUser.email)==0){
 	    	printf("Email name empty\n");
 	    	check=0;
 	    	continue;
@@ -48,7 +51,7 @@ int check=0;
 	    printf("Enter the gender (1 for male, 0 for female): ");
 	    scanf("%d", &newUser.gender);
 	    getchar();
-	    printf("Enter the Date of Birth (DD\MM\YY): \n");
+	    printf("Enter the Date of Birth (DD\\MM\\YY): \n");
 	    scanf("%d%d%d", &newUser.dateOfBirth.day, &newUser.dateOfBirth.month, &newUser.dateOfBirth.year);	    
 	} 	
 	user[*uses]=newUser;
@@ -57,7 +60,52 @@ int check=0;
     printf("\n User added successfully!\n");
     (*uses)++;
 }
-void findUser(struct User* user, int uses) {
+void login() {
+	system("cls");
+	char email[50];  // Khai báo biến email
+    char password[50];  // Khai báo biến password
+    printf("\n***Bank Management System Using C***\n");
+    printf("\n\tLOGIN\n");
+    printf("====================================\n");
+    printf("Email: ");
+    fgets(email, sizeof(email), stdin);
+    getchar();
+    email[strcspn(email, "\n")] = '\0';  // Xóa ký tự xuống dòng nếu có
+
+    printf("Password: ");
+    
+    // Đọc mật khẩu và hiển thị dưới dạng dấu '*'
+    int i = 0;
+    char ch;
+    while ((ch = getchar()) != '\n' && i < sizeof(password) - 1) {
+        if (ch == '\b' && i > 0) { // Xử lý backspace
+            printf("\b \b");
+            i--;
+        } else {
+            password[i++] = ch;
+            printf("*");
+        }
+    }
+    password[i] = '\0';  // Kết thúc chuỗi
+
+    printf("\n====================================\n");
+    printf("Login successful (dummy check)\n");
+}
+
+void goBack(struct User *user, int* uses){
+	char choice;
+	printf("Go back(b) or Exit(0) ? ");
+	scanf("%s",&choice);
+	if(choice=='b'){
+		menuAdmin(user, uses);
+	}
+	else if(choice==0){
+		printf("\nExiting the program...\n");
+		return;
+	}
+}
+
+void findIdUser(struct User* user, int uses) {
     char id[20];
     int flag = 1;
     printf("Enter id to find: ");
@@ -69,21 +117,51 @@ void findUser(struct User* user, int uses) {
         if(strcmp(id, user[i].userId) == 0) {
             flag = 0;
             printf("ID found:\n");
-            printf("ID: %s\n", user[i].userId);
-            printf("Name: %s\n", user[i].name);
-            printf("Email: %s\n", user[i].email);
-            printf("Phone: %s\n", user[i].phone);
-            printf("Gender: %s\n", user[i].gender ? "male" : "female");
-            printf("Date of Birth: %d/%d/%d\n", user[i].dateOfBirth.day, user[i].dateOfBirth.month, user[i].dateOfBirth.year);
-            break;
-        }
+            printf("|============|=======================|================================|==============|==========|\n");
+    		printf("|%-12s|%-23s|%-32s|%-14s|%-10s|\n", "UserId", "Name", "Email", "Phone", "Gender");
+    			for(int i = 0; i < uses; i++) {
+        			printf("|============|=======================|================================|==============|==========|\n");
+        			printf("|%-12s|%-23s|%-32s|%-14s|%-10s|\n", user[i].userId, user[i].name, user[i].email, user[i].phone, user[i].gender ? "male" : "female");
     }
+    printf("|============|=======================|================================|==============|==========|\n");
+    break;
+}
+        }
     if(flag) {
         printf("ID not found!!\n");
     }
 }
 
+void findNameUser (struct User* user, int uses){
+    char name[20];
+    int flag = 1;
+    printf("Enter name to find: ");
+    getchar();
+    fgets(name, 20, stdin);
+    name[strcspn(name, "\n")] = '\0';
+
+    for(int i = 0; i < uses; i++) {
+        if(strcmp(name, user[i].name) == 0) {
+            flag = 0;
+            printf("Name found:\n");
+            printf("%50s", "*** List User ***\n");
+    		printf("|============|=======================|================================|==============|==========|\n");
+    		printf("|%-12s|%-23s|%-32s|%-14s|%-10s|\n", "UserId", "Name", "Email", "Phone", "Gender");
+    			for(int i = 0; i < uses; i++) {
+        			printf("|============|=======================|================================|==============|==========|\n");
+        			printf("|%-12s|%-23s|%-32s|%-14s|%-10s|\n", user[i].userId, user[i].name, user[i].email, user[i].phone, user[i].gender ? "male" : "female");
+    }
+    printf("|============|=======================|================================|==============|==========|\n");
+    break;
+}
+        }
+    if(flag) {
+        printf("Name not found!!\n");
+    }
+}
+
 void listUser(struct User *user, int uses) {
+	system("cls");
     printf("%50s", "*** List User ***\n");
     printf("|============|=======================|================================|==============|==========|\n");
     printf("|%-12s|%-23s|%-32s|%-14s|%-10s|\n", "UserId", "Name", "Email", "Phone", "Gender");
@@ -93,9 +171,11 @@ void listUser(struct User *user, int uses) {
     }
     printf("|============|=======================|================================|==============|==========|\n");
 }
-
+ 
 void menuAdmin(struct User* user, int* uses) {
+	system("cls");
     int choice;
+    printf("%d", choice);
     do {
         printf("***Bank Management System Using C***\n\n");
         printf("            MENU\n");
@@ -106,6 +186,7 @@ void menuAdmin(struct User* user, int* uses) {
         printf("[4] Lock (unlock) a user\n");
         printf("[5] User guideline\n");
         printf("[6] About us\n");
+        printf("[7] return menu\n");
         printf("[0] Exit\n");
         printf("======================================\n");
         printf("Enter your choice: ");
@@ -118,19 +199,43 @@ void menuAdmin(struct User* user, int* uses) {
             case 2:
                 listUser(user, *uses);
                 break;
-            case 3:
-                findUser(user, *uses);
-                break;
-            case 0:
-                printf("Exiting admin menu...\n");
-                break;
+            case 3: {
+				char choiceSmall;
+				getchar();
+				printf("[a].find by name user\n");
+				printf("[b].find by Id user\n");
+				printf("[c].return to menu\n");
+				printf("Please choose a search method :");
+				scanf("%s",&choiceSmall);
+            	switch(choiceSmall){
+            		case'a':
+                		findNameUser(user, *uses);
+                		goBack(user, uses);
+                		break;
+                	case'b':
+                		findIdUser(user, *uses);
+                		goBack(user,uses);
+                		break;
+                	case'c':
+						goBack(user,uses);
+						break;
+                	default:
+						printf("no value is escaping /n");           
+                		break;
+			}
+            	
+            	}
+            case 7:
+                goBack(user, uses);
+                break;    
             default:
                 printf("Invalid choice! Please try again.\n");
         }
     } while(choice != 0);
 }
-
+ 
 void showSystemMenu(struct User *user, int* uses) {
+	system("cls");
     int choice;
 
     printf("***Bank Management System Using C***\n\n");
@@ -147,9 +252,12 @@ void showSystemMenu(struct User *user, int* uses) {
         case 1:
             printf("\nYou selected Admin.\n");
             menuAdmin(user, uses);
+            goBack(user, uses);
             break;
         case 2:
             printf("\nYou selected User.\n");
+            login(user, uses);
+            goBack(user, uses);
             break;
         case 0:
             printf("\nExiting the program...\n");
@@ -158,3 +266,4 @@ void showSystemMenu(struct User *user, int* uses) {
             printf("\nInvalid choice! Please try again.\n");
     }
 }
+
