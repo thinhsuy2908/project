@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "datatype.h"
-
+#include "../include/function.h"
+#include "../include/datatype.h"
 
 void AddUser(struct User* user,int* uses) {
-	system("cls"); 
+	system("cls");
 	struct User newUser;
 	int check=0;
 	while(!check){
@@ -14,14 +14,30 @@ void AddUser(struct User* user,int* uses) {
 	    printf("Enter the ID: ");
 	    scanf("%s", newUser.userId);
 	    while(getchar()!='\n');
+
 	    printf("Enter the Name: ");
 	    fgets(newUser.name, sizeof(newUser.name), stdin);
 	    newUser.name[strcspn(newUser.name, "\n")] = 0;
-	    if(strlen(newUser.userId)==0 || strlen(newUser.name)==0){
+
+	    printf("Enter the email: ");
+	    fgets(newUser.email, sizeof(newUser.email), stdin);
+	    newUser.email[strcspn(newUser.email, "\n")] = 0;
+
+
+	    printf("Enter the Phone number: ");
+	    gets(newUser.phone);
+	    printf("Enter the gender (1 for male, 0 for female): ");
+	    scanf("%d", &newUser.gender);
+	    getchar();
+	    printf("Enter the Date of Birth (DD\\MM\\YY): \n");
+	    scanf("%d%d%d", &newUser.dateOfBirth.day, &newUser.dateOfBirth.month, &newUser.dateOfBirth.year);
+		newUser.Status=1;
+		 if(strlen(newUser.userId)==0 || strlen(newUser.name)==0){
 	    	printf("ID or name empty\n");
 	    	check=0;
 	    	continue;
 		}
+
 		for(int i=0;i<*uses;++i){
 			if(strcmp(newUser.userId, user[i].userId)==0){
 				printf("ID exist\n");
@@ -29,7 +45,6 @@ void AddUser(struct User* user,int* uses) {
 				break;
 			}
 		}
-		
 		for(int i=0;i<*uses;++i){
 			if(strcmp(newUser.name, user[i].name)==0){
 				printf("Name exist\n");
@@ -37,29 +52,33 @@ void AddUser(struct User* user,int* uses) {
 				break;
 			}
 		}
-	    printf("Enter the email: ");
-	    fgets(newUser.email, sizeof(newUser.email), stdin);
-	    newUser.email[strcspn(newUser.email, "\n")] = 0;
-	    
-	    if(strlen(newUser.email)==0){
+		 for(int i=0;i<*uses;++i){
+			if(strcmp(newUser.phone, user[i].phone)==0){
+				printf("Phone number exist\n");
+				check=0;
+				break;
+			}
+		}
+		 if(strlen(newUser.email)==0){
 	    	printf("Email name empty\n");
 	    	check=0;
 	    	continue;
 		}
-	    printf("Enter the Phone number: ");
-	    gets(newUser.phone);
-	    printf("Enter the gender (1 for male, 0 for female): ");
-	    scanf("%d", &newUser.gender);
-	    getchar();
-	    printf("Enter the Date of Birth (DD\\MM\\YY): \n");
-	    scanf("%d%d%d", &newUser.dateOfBirth.day, &newUser.dateOfBirth.month, &newUser.dateOfBirth.year);	    
-		strcpy("open",newUser.Status);
-	} 	
+		for(int i=0;i<*uses;++i){
+			if(strcmp(newUser.email, user[i].email)==0){
+				printf("email exist\n");
+				check=0;
+				break;
+			}
+		}
+
+	}
 	user[*uses]=newUser;
 	printf("\nAdded successfully\n");
-      
+
     printf("\n User added successfully!\n");
     (*uses)++;
+	fileWrite(user,*uses);
 }
 void login() {
 	system("cls");
@@ -93,18 +112,7 @@ void login() {
     printf("Login successful (dummy check)\n");
 }
 
-void goBack(struct User *user, int* uses){
-	char choice;
-	printf("Go back(b) or Exit(0) ? ");
-	scanf("%s",&choice);
-	if(choice=='b'){
-		menuAdmin(user, uses);
-	}
-	else if(choice==0){
-		printf("\nExiting the program...\n");
-		return;
-	}
-}
+
 
 void findIdUser(struct User* user, int uses) {
     char id[20];
@@ -119,10 +127,10 @@ void findIdUser(struct User* user, int uses) {
             flag = 0;
             printf("ID found:\n");
             printf("|============|=======================|================================|==============|==========|\n");
-    		printf("|%-12s|%-23s|%-32s|%-14s|%-10s|\n", "UserId", "Name", "Email", "Phone", "Gender");
+    		printf("|%-12s|%-23s|%-32s|%-14s|%-10s||%-10s|\n", "UserId", "Name", "Email", "Phone", "Gender","Status");
     			for(int i = 0; i < uses; i++) {
         			printf("|============|=======================|================================|==============|==========|\n");
-        			printf("|%-12s|%-23s|%-32s|%-14s|%-10s|\n", user[i].userId, user[i].name, user[i].email, user[i].phone, user[i].gender ? "male" : "female");
+        			printf("|%-12s|%-23s|%-32s|%-14s|%-10s||%-10s|\n", user[i].userId, user[i].name, user[i].email, user[i].phone, user[i].gender ? "male" : "female",user[i].Status ? "open":"close" );
     }
     printf("|============|=======================|================================|==============|==========|\n");
     break;
@@ -168,108 +176,24 @@ void listUser(struct User *user, int uses) {
     printf("|%-12s|%-23s|%-32s|%-14s|%-10s|\n", "UserId", "Name", "Email", "Phone", "Status");
     for(int i = 0; i < uses; i++) {
         printf("|============|=======================|================================|==============|==========|\n");
-        printf("|%-12s|%-23s|%-32s|%-14s|%-10s|\n", user[i].userId, user[i].name, user[i].email, user[i].phone, user[i].Status );
+        printf("|%-12s|%-23s|%-32s|%-14s|%-10s|\n", user[i].userId, user[i].name, user[i].email, user[i].phone, user[i].Status ?"open ":"close");
     }
     printf("|============|=======================|================================|==============|==========|\n");
 }
- 
-void menuAdmin(struct User* user, int* uses) {
-	system("cls");
-    int choice;
-    printf("%d", choice);
-    do {
-        printf("***Bank Management System Using C***\n\n");
-        printf("            MENU\n");
-        printf("====================================\n");
-        printf("[1] Add a new user\n");
-        printf("[2] Show all users\n");
-        printf("[3] Show details of a user\n");
-        printf("[4] Lock (unlock) a user\n");
-        printf("[5] User guideline\n");
-        printf("[6] About us\n");
-        printf("[7] return menu\n");
-        printf("[0] Exit\n");
-        printf("======================================\n");
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
 
-        switch(choice) {
-            case 1:
-                AddUser(user, uses);
-                break;
-            case 2:
-                listUser(user, *uses);
-                break;
-            case 3: {
-				char choiceSmall;
-				getchar();
-				printf("[a].find by name user\n");
-				printf("[b].find by Id user\n");
-				printf("[c].return to menu\n");
-				printf("Please choose a search method :");
-				scanf("%s",&choiceSmall);
-            	switch(choiceSmall){
-            		case'a':
-                		findNameUser(user, *uses);
-                		goBack(user, uses);
-                		break;
-                	case'b':
-                		findIdUser(user, *uses);
-                		goBack(user,uses);
-                		break;
-                	case'c':
-						goBack(user,uses);
-						break;
-                	default:
-						printf("no value is escaping /n");           
-                		break;
-			}
-            	
-            	}
-            case 4:
-            	idLock(user, *uses);
-            	break;
-            case 7:
-                goBack(user, uses);
-                break;    
-            default:
-                printf("Invalid choice! Please try again.\n");
-        }
-    } while(choice != 0);
+void goBack(struct User *user, int* uses){
+	char choice;
+	printf("Go back(b) or Exit(0) ? ");
+	scanf("%s",&choice);
+	if(choice=='b'){
+		return ;
+	}
+	else if(choice==0){
+		printf("\nExiting the program...\n");
+		return;
+	}
 }
- 
-void showSystemMenu(struct User *user, int* uses) {
-	system("cls");
-    int choice;
 
-    printf("***Bank Management System Using C***\n\n");
-    printf("\tCHOOSE YOUR ROLE\t\n");
-    printf("================================\n");
-    printf("[1] Admin.\n");
-    printf("[2] User.\n");
-    printf("[0] Exit the Program.\n");
-    printf("================================\n");
-    printf("Enter The Choice: ");
-    scanf("%d", &choice);
-
-    switch (choice) {
-        case 1:
-            printf("\nYou selected Admin.\n");
-            menuAdmin(user, uses);
-            goBack(user, uses);
-            break;
-        case 2:
-            printf("\nYou selected User.\n");
-            login(user, uses);
-            goBack(user, uses);
-            break;
-        case 0:
-            printf("\nExiting the program...\n");
-            break;
-        default:
-            printf("\nInvalid choice! Please try again.\n");
-    }
-}
 void idLock(struct User *user, int* uses){
 	system("cls");
 	char id[20];
@@ -281,11 +205,11 @@ void idLock(struct User *user, int* uses){
     fgets(id, 20, stdin);
     id[strcspn(id, "\n")] = '\0';
 
-    for(int i = 0; i < uses; i++) {
+    for(int i = 0; i < *uses; i++) {
         if(strcmp(id, user[i].userId) == 0) {
             flag = 0;
             printf("ID found:\n");
-            if(status == "close"){
+            if(status == 0){
             	printf("Your account is locked");
             	printf("Do you want to change the status to closed?");
             	scanf("%s",&choice);
@@ -298,9 +222,10 @@ void idLock(struct User *user, int* uses){
             			printf("[y].Yes");
             			strcpy("open",user[i].Status);
             			printf("open successfully");
+            			fileWrite(user,*uses);
 				}
 			}
-			else if(status == "open"){
+			else if(status == 1){
 				printf("Your account is open");
 				printf("Do you want to change the status to open?");
 				switch(choice){
@@ -311,7 +236,8 @@ void idLock(struct User *user, int* uses){
             		case 'y':
             			
             			strcpy("close",user[i].Status);
-						printf("closed successfully");	
+						printf("closed successfully");
+						fileWrite(user,*uses);	
 			}
     break;
 			}
@@ -321,34 +247,160 @@ void idLock(struct User *user, int* uses){
 }
 }
 }
-printf("\n\t+------------x SORT MENU x-------------+\n");		
-printf("|%-38s|\n\t", "[1] Sort students by name Descending.");		
-printf("|%-38s|\n\t\t\t\t\t\t", "[2] Sort students by name Ascending.");
+void arrange(struct User *user, int* uses){
+	int Choice;
+	system("cls");
+printf("+------------x SORT MENU x-------------+\n");		
+printf( "[1] Sort user by name Descending.\n");		
+printf( "[2] Sort user by name Ascending. \n");
 printf("+--------------------------------------+");
-printf("\n\n\t\t\t\t\t\t-> Enter your choice: ");
-scanf("%d", &sortChoice);
-	if(sortChoice == 1){
-		for(int i = 0; i < (*studentCount) - 1; i++){
-			for(int j = 0; j < (*studentCount) - i - 1; j++){
-				if(strcmp(students[j].name, students[j + 1].name) < 0){
-						Student temp = students[j];
-						students[j] = students[j + 1];
-						students[j + 1] = temp;
+printf("\n Enter your choice: ");
+scanf("%d", &Choice);
+	if(Choice == 1){
+		for(int i = 0; i < (*uses) - 1; i++){
+			for(int j = 0; j < (*uses) - i - 1; j++){
+				if(strcmp(user[j].name, user[j + 1].name) < 0){
+						struct User temp = user[j];
+						user[j] = user[j + 1];
+						user[j + 1] = temp;
 }
 	}	
 		}
 									
 printf("\n\t User after Descending arrangement: ");
-displayListStudents(students, *studentCount);
-goBackOrExit();
+listUser(user, *uses);
+goBack(user, uses);
 }
-else if(sortChoice == 2){
-	for(int a = 0; a < (*userCount) - 1; a++){
-		for(int b = 0; b < (*userCount) - a - 1; b++){
-			if(strcmp(students[b].name, students[b + 1].name) > 0){
-				Student temp = students[b];
-				students[b] = students[b + 1];
-				students[b + 1] = temp;
+else if(Choice == 2){
+	for(int a = 0; a < (*uses) - 1; a++){
+		for(int b = 0; b < (*uses) - a - 1; b++){
+			if(strcmp(user[b].name, user[b + 1].name) > 0){
+				struct User temp = user[b];
+				user[b] = user[b + 1];
+				user[b + 1] = temp;
+			}
+		}	
+	}
 }
-	}	
+}
+void menuAdmin(struct User* user, int* uses) {
+	system("cls");
+	int choice;
+	printf("%d", choice);
+	do {
+		printf("***Bank Management System Using C***\n\n");
+		printf("            MENioy6iurtfuyrU\n");
+		printf("====================================\n");
+		printf("[1] Add a new user\n");
+		printf("[2] Show all users\n");
+		printf("[3] Show details of a user\n");
+		printf("[4] Lock (unlock) a user\n");
+		printf("[5] User guideline\n");
+		printf("[6] About us\n");
+		printf("[7] return menu\n");
+		printf("[0] Exit\n");
+		printf("======================================\n");
+		printf("Enter your choice: ");
+		scanf("%d", &choice);
+
+		switch(choice) {
+			case 1:
+				AddUser(user, uses);
+			break;
+			case 2:
+				listUser(user, *uses);
+			break;
+			case 3: {
+				char choiceSmall;
+				getchar();
+				printf("[a].find by name user\n");
+				printf("[b].find by Id user\n");
+				printf("[c].return to menu\n");
+				printf("Please choose a search method :");
+				scanf("%s",&choiceSmall);
+				switch(choiceSmall){
+					case'a':
+						findNameUser(user, *uses);
+					goBack(user, uses);
+					break;
+					case'b':
+						findIdUser(user, *uses);
+					goBack(user,uses);
+					break;
+					case'c':
+						goBack(user,uses);
+					break;
+					default:
+						printf("no value is escaping /n");
+					break;
+				}
+
+			}
+			case 5:
+				arrange(user, uses);
+			break;
+			case 4:
+				idLock(user, *uses);
+			break;
+			case 7:
+				goBack(user, uses);
+			break;
+			default:
+				printf("Invalid choice! Please try again.\n");
 		}
+	} while(choice != 0);
+}
+
+void showSystemMenu(struct User *user, int* uses) {
+	system("cls");
+	fileRead(user, uses);
+	int choice;
+
+	printf("***Bank Management System Using C***\n\n");
+	printf("\tCHOOSE YOUR ROLE\t\n");
+	printf("================================\n");
+	printf("[1] Admin.\n");
+	printf("[2] User.\n");
+	printf("[0] Exit the Program.\n");
+	printf("================================\n");
+	printf("Enter The Choice: ");
+	scanf("%d", &choice);
+
+	switch (choice) {
+		case 1:
+			printf("\nYou selected Admin.\n");
+		menuAdmin(user, uses);
+		goBack(user, uses);
+		break;
+		case 2:
+			printf("\nYou selected User.\n");
+		login(user, uses);
+		goBack(user, uses);
+		break;
+		case 0:
+			printf("\nExiting the program...\n");
+		break;
+		default:
+			printf("\nInvalid choice! Please try again.\n");
+	}
+}
+
+void fileRead(struct User *user, int* uses){
+	FILE *file=fopen("user.bin","rb");
+	if(file==NULL){
+		printf("you cannot read file");
+	}
+	printf("----%d---", *uses);
+
+	*uses=fread(user,sizeof(struct User),100,file);
+	fclose(file);
+}
+void fileWrite(struct User *user, int uses){
+	FILE *file=fopen("user.bin","wb");
+	if(file==NULL){
+		printf("you cannot write file");
+	}
+	printf("----%d----", uses);
+	fwrite(user,sizeof(struct User),uses,file);
+	fclose(file);
+}
