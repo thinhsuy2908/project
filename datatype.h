@@ -5,7 +5,7 @@
 
 
 struct Date{
-	int month,day,year;
+    int month,day,year;
 };
 struct Transaction {
     char transferId[10];
@@ -18,7 +18,7 @@ struct Transaction {
 struct AccountInfo {
     char userId[20];
     float balance;
-    bool status;
+    int status;
     char username[10];
     char password[10];
     struct Transaction transactionHistory[];
@@ -30,5 +30,5 @@ struct User {
     int gender;
     char phone[10];
     char email[50];
-    char Status[20];
+    int Status;
 };
