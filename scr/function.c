@@ -383,7 +383,6 @@ void showSystemMenu(struct User *user, int* uses) {
 			char b[20];
 			printf("\nYou selected User.\n");
 			login(a,b,0);
-			menuAdmin(user,uses);
 			goBack(user, uses);
 			break;
 		}
